@@ -42,8 +42,6 @@
  * - Allow orContains (to chain contains together)
  *
  * - Allow choose 'create'
- *
- * - Allow see whether 'create' is an option
  */
 var Selectize = {
     _element: null,
@@ -51,6 +49,7 @@ var Selectize = {
     _results: [],
     _resultsRaw: [],
     _id: null,
+    _canCreate: null,
     findById: function (id) {
         if (typeof id == 'undefined' || id.length == 0) {
             throw "No ID Provided";
@@ -81,6 +80,10 @@ var Selectize = {
                 };
             });
 
+            this._canCreate = element.all(by.css('#' + this._id + ' + .selectize-control .selectize-dropdown .selectize-dropdown-content')).all(by.css('.create')).map(function(elm) {
+               return elm.isPresent();
+            });
+
             return this;
         }
     },
@@ -105,6 +108,12 @@ var Selectize = {
             }
             return found;
         });
+    },
+    canCreate: function() {
+        return this._canCreate;
+    },
+    create: function() {
+        element(by.css('#' + this._id + ' + .selectize-control .selectize-dropdown .selectize-dropdown-content .create')).click();
     }
 };
 
